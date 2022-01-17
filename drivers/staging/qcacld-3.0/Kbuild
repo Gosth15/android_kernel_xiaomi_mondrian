@@ -3011,6 +3011,8 @@ INCS +=		$(COAP_WMI_INC)
 ccflags-y += $(INCS) \
 		-Wno-unused-variable -Wno-unused-function
 
+# LTO does way too much here
+ccflags-y += $(DISABLE_LTO)
 cppflags-y +=	-Wall
 
 cppflags-$(CONFIG_THERMAL_STATS_SUPPORT) += -DTHERMAL_STATS_SUPPORT
