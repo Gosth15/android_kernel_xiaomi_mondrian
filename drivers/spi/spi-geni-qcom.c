@@ -847,6 +847,7 @@ static struct platform_driver spi_geni_driver = {
 		.name = "geni_spi",
 		.pm = &spi_geni_pm_ops,
 		.of_match_table = spi_geni_dt_match,
+        .probe_type = PROBE_PREFER_ASYNCHRONOUS,
 	},
 };
 module_platform_driver(spi_geni_driver);
