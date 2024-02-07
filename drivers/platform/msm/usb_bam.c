@@ -25,8 +25,6 @@
 #define LOGLEVEL_DEBUG 7
 #define LOGLEVEL_ERR 3
 
-#define ENABLE_EVENT_LOG 0
-
 #define log_event(log_level, x...)					\
 do {									\
 	unsigned long flags;						\
@@ -35,14 +33,12 @@ do {									\
 		pr_debug(x);						\
 	else if (log_level == LOGLEVEL_ERR)				\
 		pr_err(x);						\
-	if (ENABLE_EVENT_LOG) {				\
-		write_lock_irqsave(&usb_bam_dbg.lck, flags);			\
-		buf = usb_bam_dbg.buf[usb_bam_dbg.idx];				\
-		put_timestamp(buf);						\
-		snprintf(&buf[TIME_BUF_LEN - 1], DBG_EVENT_LEN, x);		\
-		usb_bam_dbg.idx = (usb_bam_dbg.idx + 1) % DBG_MAX_MSG;		\
-		write_unlock_irqrestore(&usb_bam_dbg.lck, flags);		\
-	} \
+	write_lock_irqsave(&usb_bam_dbg.lck, flags);			\
+	buf = usb_bam_dbg.buf[usb_bam_dbg.idx];				\
+	put_timestamp(buf);						\
+	snprintf(&buf[TIME_BUF_LEN - 1], DBG_EVENT_LEN, x);		\
+	usb_bam_dbg.idx = (usb_bam_dbg.idx + 1) % DBG_MAX_MSG;		\
+	write_unlock_irqrestore(&usb_bam_dbg.lck, flags);		\
 } while (0)
 
 #define log_event_none(x, ...) log_event(LOGLEVEL_NONE, x, ##__VA_ARGS__)
