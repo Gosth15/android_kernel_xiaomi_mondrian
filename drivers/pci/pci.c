@@ -2840,13 +2840,13 @@ static const struct dmi_system_id bridge_d3_blacklist[] = {
 	{
 		/*
 		 * Downstream device is not accessible after putting a root port
-		 * into D3cold and back into D0 on Elo Continental Z2 board
+		 * into D3cold and back into D0 on Elo i2.
 		 */
-		.ident = "Elo Continental Z2",
+		.ident = "Elo i2",
 		.matches = {
-			DMI_MATCH(DMI_BOARD_VENDOR, "Elo Touch Solutions"),
-			DMI_MATCH(DMI_BOARD_NAME, "Geminilake"),
-			DMI_MATCH(DMI_BOARD_VERSION, "Continental Z2"),
+			DMI_MATCH(DMI_SYS_VENDOR, "Elo Touch Solutions"),
+			DMI_MATCH(DMI_PRODUCT_NAME, "Elo i2"),
+			DMI_MATCH(DMI_PRODUCT_VERSION, "RevB"),
 		},
 	},
 #endif
@@ -4815,7 +4815,7 @@ void pci_bridge_wait_for_secondary_bus(struct pci_dev *dev)
 	if (pci_dev_is_disconnected(dev))
 		return;
 
-	if (!pci_is_bridge(dev))
+	if (!pci_is_bridge(dev) || !dev->bridge_d3)
 		return;
 
 	down_read(&pci_bus_sem);
