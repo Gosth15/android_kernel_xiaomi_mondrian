@@ -2602,8 +2602,8 @@ static inline bool uclamp_latency_sensitive(struct task_struct *p)
 	if (!css)
 		return false;
 
-        if (!strlen(css->cgroup->kn->name))
-            return 0;
+	if (!strlen(css->cgroup->kn->name))
+		return 0;
 
 	tg = container_of(css, struct task_group, css);
 

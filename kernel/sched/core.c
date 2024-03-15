@@ -8246,8 +8246,8 @@ static ssize_t cpu_uclamp_write(struct kernfs_open_file *of, char *buf,
 	struct task_group *tg;
 
 #ifdef CONFIG_UCLAMP_ASSIST
-        if (task_is_booster(current))
-                return nbytes;
+	if (task_is_booster(current))
+		return nbytes;
 #endif
 
 	req = capacity_from_percent(buf);

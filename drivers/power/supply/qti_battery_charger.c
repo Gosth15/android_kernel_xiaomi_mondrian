@@ -24,6 +24,7 @@
 #include <linux/thermal.h>
 #include <linux/ktime.h>
 #include <linux/soc/qcom/panel_event_notifier.h>
+#include <linux/moduleparam.h>
 
 #if defined(CONFIG_DRM_PANEL)
 static struct drm_panel *active_panel,*active_panel_sec;
@@ -628,6 +629,12 @@ static const char * const power_supply_usbc_text[] = {
 	"Audio Adapter",
 	"Powered cable w/o sink",
 };
+
+static bool report_real_capacity = false;
+module_param(report_real_capacity, bool, S_IRUGO);
+
+static bool fix_battery_usage = false;
+module_param(fix_battery_usage, bool, S_IRUGO);
 
 int StringToHex(char *str, unsigned char *out, unsigned int *outlen)
 {
@@ -1810,6 +1817,7 @@ static int battery_psy_get_prop(struct power_supply *psy,
 {
 	struct battery_chg_dev *bcdev = power_supply_get_drvdata(psy);
 	struct psy_state *pst = &bcdev->psy_list[PSY_TYPE_BATTERY];
+	struct psy_state *pst_xm = &bcdev->psy_list[PSY_TYPE_XM];
 	int prop_id, rc;
 
 	pval->intval = -ENODATA;
@@ -1830,11 +1838,15 @@ static int battery_psy_get_prop(struct power_supply *psy,
 		pval->strval = pst->model;
 		break;
 	case POWER_SUPPLY_PROP_CAPACITY:
+		if (report_real_capacity && !read_property_id(bcdev, pst_xm, XM_PROP_FG1_RSOC)) {
+			pval->intval = pst_xm->prop[XM_PROP_FG1_RSOC];
+		} else {
 #if defined(CONFIG_BQ_FUEL_GAUGE)
-		pval->intval = pst->prop[prop_id] / 100;
+			pval->intval = pst->prop[prop_id] / 100;
 #else
-		pval->intval = DIV_ROUND_CLOSEST(pst->prop[prop_id], 100);
+			pval->intval = DIV_ROUND_CLOSEST(pst->prop[prop_id], 100);
 #endif
+		}
 		if (bcdev->fake_soc >= 0 && bcdev->fake_soc <= 100)
 			pval->intval = bcdev->fake_soc;
 		break;
@@ -1857,6 +1869,19 @@ static int battery_psy_get_prop(struct power_supply *psy,
 		if (pval->intval == POWER_SUPPLY_STATUS_CHARGING &&
 			bcdev->report_power_absent)
 			pval->intval = POWER_SUPPLY_STATUS_DISCHARGING;
+		break;
+	case POWER_SUPPLY_PROP_CHARGE_COUNTER:
+		if (fix_battery_usage)
+			pval->intval = pst->prop[prop_id] * 1000;
+		else
+			pval->intval = pst->prop[prop_id];
+		break;
+	case POWER_SUPPLY_PROP_TIME_TO_FULL_AVG:
+		if (fix_battery_usage)
+			pval->intval = (pst->prop[prop_id] * 60) > 65535 ?
+				-1 : (pst->prop[prop_id] * 60);
+		else
+			pval->intval = pst->prop[prop_id];
 		break;
 	default:
 		pval->intval = pst->prop[prop_id];
