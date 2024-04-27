@@ -1052,7 +1052,7 @@ static int haptics_get_closeloop_lra_period(
 	u64 tmp;
 	int rc;
 
-#ifdef CONFIG_MACH_XIAOMI_MARBLE
+#ifdef CONFIG_MACH_XIAOMI_MONDRIAN
 	// protect low rate of xbl f0 abnormal
 	int f0_mix, f0_max, f0_default, f0_cnt;
 	int rc1, rc2, rc3, rc4;
@@ -1186,7 +1186,7 @@ static int haptics_get_closeloop_lra_period(
 		tmp = div_u64(tmp, last_good_tlra_cl_sts);
 		tmp = div_u64(tmp, 293);
 		config->rc_clk_cal_count = div_u64(tmp, config->t_lra_us);
-#ifdef CONFIG_MACH_XIAOMI_MARBLE
+#ifdef CONFIG_MACH_XIAOMI_MONDRIAN
 		// protect low rate of xbl f0 abnormal
 		if (in_boot) {
 			u32 xbl_f0 = USEC_PER_SEC / config->cl_t_lra_us;
@@ -2256,7 +2256,7 @@ static int haptics_init_custom_effect(struct haptics_chip *chip)
 	chip->custom_effect->pattern = NULL;
 	chip->custom_effect->brake = NULL;
 	chip->custom_effect->id = UINT_MAX;
-#ifdef CONFIG_MACH_XIAOMI_MARBLE
+#ifdef CONFIG_MACH_XIAOMI_MONDRIAN
 	chip->custom_effect->vmax_mv = 9100;
 #else
 	chip->custom_effect->vmax_mv = 4200;	//chip->config.vmax_mv

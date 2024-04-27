@@ -2141,11 +2141,11 @@ config MACH_XIAOMI
 
 menu "Xiaomi board selection"
 
-config MACH_XIAOMI_MARBLE
-        bool "marble board"
+config MACH_XIAOMI_MONDRIAN
+        bool "mondrian board"
         select MACH_XIAOMI
         help
-          Support for Redmi Note 12 Turbo / Poco F5, codenamed marble / marblein.
+          Support for Poco F5 Pro/Redmi K60.
 
 endmenu
 

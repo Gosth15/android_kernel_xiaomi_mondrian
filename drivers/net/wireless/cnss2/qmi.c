@@ -651,7 +651,7 @@ static int cnss_get_bdf_file_name(struct cnss_plat_data *plat_priv,
 		/* Board ID will be equal or less than 0xFF in GF mask case */
 		if (plat_priv->board_info.board_id == 0xFF) {
 			if (plat_priv->chip_info.chip_id & CHIP_ID_GF_MASK) {
-#if IS_ENABLED(CONFIG_MI_HARDWARE_ID) && IS_ENABLED(CONFIG_MACH_XIAOMI_MARBLE)
+#if IS_ENABLED(CONFIG_MI_HARDWARE_ID) && IS_ENABLED(CONFIG_MACH_XIAOMI_MONDRIAN)
 				if (hw_country_ver == (uint32_t)CountryIndia)
 					snprintf(filename_tmp, filename_len,
 						"bd_m16tgfin.elf");
@@ -666,7 +666,7 @@ static int cnss_get_bdf_file_name(struct cnss_plat_data *plat_priv,
 					 ELF_BDF_FILE_NAME_GF);
 #endif
 			} else {
-#if IS_ENABLED(CONFIG_MI_HARDWARE_ID) && IS_ENABLED(CONFIG_MACH_XIAOMI_MARBLE)
+#if IS_ENABLED(CONFIG_MI_HARDWARE_ID) && IS_ENABLED(CONFIG_MACH_XIAOMI_MONDRIAN)
 				if (hw_country_ver == (uint32_t)CountryIndia)
 					snprintf(filename_tmp, filename_len,
 						"bd_m16tin.elf");
@@ -722,7 +722,7 @@ static int cnss_get_bdf_file_name(struct cnss_plat_data *plat_priv,
 		}
 		break;
 	case CNSS_BDF_REGDB:
-#if IS_ENABLED(CONFIG_MI_HARDWARE_ID) && IS_ENABLED(CONFIG_MACH_XIAOMI_MARBLE)
+#if IS_ENABLED(CONFIG_MI_HARDWARE_ID) && IS_ENABLED(CONFIG_MACH_XIAOMI_MONDRIAN)
 		snprintf(filename_tmp, filename_len, "regdb_xiaomi.bin");
 #else
 		snprintf(filename_tmp, filename_len, REGDB_FILE_NAME);
