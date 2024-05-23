@@ -15,8 +15,24 @@
 #include <crypto/internal/scompress.h>
 
 
-static uint __read_mostly compression_level = 3;
-module_param(compression_level, uint, 0644);
+static int __read_mostly compression_level = 3;
+
+static int set_compression_level(const char *buf, const struct kernel_param *kp)
+{
+	int ret, temp;
+
+	ret = kstrtoint(buf, 0, &temp);
+	if (ret)
+		return ret;
+
+	if (temp == 0 || temp < zstd_min_clevel() || temp > zstd_max_clevel())
+		return -EINVAL;
+
+	return param_set_int(buf, kp);
+}
+
+module_param_call(compression_level, set_compression_level, param_get_int,
+		  &compression_level, 0644);
 
 struct zstd_ctx {
 	zstd_cctx *cctx;
