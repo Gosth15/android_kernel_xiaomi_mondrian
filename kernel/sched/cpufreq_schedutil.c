@@ -698,7 +698,7 @@ static struct governor_attr up_rate_limit_us = __ATTR_RW(up_rate_limit_us);
 static struct governor_attr down_rate_limit_us = __ATTR_RW(down_rate_limit_us);
 
 static struct attribute *sugov_attrs[] = {
-	&rate_limit_us.attr,
+	&up_rate_limit_us.attr,
     &down_rate_limit_us.attr,
 	NULL
 };
